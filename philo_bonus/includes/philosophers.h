@@ -54,7 +54,7 @@ typedef struct s_phil_struct
 }				t_phil_struct;
 
 int		ft_start_processes(t_phil_struct **phils);
-void	ft_sem_closes(t_phil_struct **phils);
+void	ft_sem_unlink(t_phil_struct **phils);
 int		ft_checkargs(char **argv);
 int		ft_isnumber(char *str);
 int		ft_atoi(const char *str);

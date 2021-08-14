@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dop_functions.c                                    :+:      :+:    :+:   */
+/*   dop_functions2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmaryjan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-long	ft_get_current_time(void)
+long	get_current_time(void)
 {
 	struct timeval	time;
 
@@ -20,15 +20,16 @@ long	ft_get_current_time(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-int	ft_message(t_phil_struct *phils, char *str)
+int	message(t_phil_struct *phils, char *str)
 {
-	if (sem_wait(phils->init_data->for_print) != 0)
+	if (phils->init_data->end_flag == 1)
+		return (1);
+	if (pthread_mutex_lock(phils->init_data->for_print) != 0)
 		return (0);
-	printf(YELLOW"%ld %d %s\n", ft_get_current_time() - phils->init_data->start,
+	printf("%ld %d %s\n", get_current_time() - phils->init_data->start,
 		phils->id, str);
-	if (ft_strncmp(str, "died", 4))
-		if (sem_post(phils->init_data->for_print) != 0)
-			return (0);
+	if (pthread_mutex_unlock(phils->init_data->for_print) != 0)
+		return (0);
 	return (1);
 }
 
@@ -36,34 +37,10 @@ int	ft_to_sleep(t_id_struct *init_data, long n)
 {
 	long	time;
 
-	time = ft_get_current_time() - init_data->start + n;
+	time = get_current_time() - init_data->start + n;
 	if (time == n - 1)
 		return (0);
-	while (ft_get_current_time() - init_data->start < time)
+	while (get_current_time() - init_data->start < time)
 		usleep(100);
 	return (1);
-}
-
-void	ft_sem_unlink(t_phil_struct **phils)
-{
-	int	i;
-
-	i = -1;
-	while (++i < phils[0]->init_data->num_phils)
-		sem_unlink(phils[i]->name);
-	sem_unlink("/for_print");
-	sem_unlink("/fork");
-	sem_unlink("/kill");
-}
-
-int	ft_one_phil(t_id_struct *init_data)
-{
-	if (sem_wait(init_data->for_print))
-		return (0);
-	printf(YELLOW"%ld 1 has taken a fork\n",
-		   ft_get_current_time() - init_data->start);
-	printf(YELLOW"%d 1 died\n", init_data->tt_die);
-	if (sem_post(init_data->for_print))
-		return (0);
-	return (2);
 }

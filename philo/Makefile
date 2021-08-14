@@ -17,6 +17,7 @@ DIR_OBJ = ./
 SRCS	=   src/main.c \
             src/thread_functions.c \
             src/dop_functions.c \
+			src/dop_functions2.c \
 
 DIR_HEADERS	= ./includes/
 

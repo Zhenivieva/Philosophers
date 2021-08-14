@@ -112,8 +112,7 @@ int	ft_start_processes(t_phil_struct **phils)
 			ft_eating(phils[i]);
 	}
 	i = -1;
-	if (sem_wait(phils[0]->init_data->kill))
-		return (0);
+	sem_wait(phils[0]->init_data->kill);
 	while (phils[++i] != NULL)
 		kill(pid[i], SIGKILL);
 	return (1);

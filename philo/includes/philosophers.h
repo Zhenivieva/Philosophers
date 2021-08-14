@@ -58,5 +58,6 @@ int		ft_start_threads(t_phil_struct **phils);
 long	get_current_time(void);
 int		message(t_phil_struct *phils, char *str);
 int		checkargs(char **argv);
+int		ft_to_sleep(t_id_struct *init_data, long n);
 
 #endif

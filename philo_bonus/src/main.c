@@ -100,7 +100,7 @@ int	ft_start(char **argv)
 		return (0);
 	if (!ft_init_phil_struct(init_data, phils) || !ft_start_processes(phils))
 		return (0);
-	ft_sem_closes(phils);
+	ft_sem_unlink(phils);
 	return (1);
 }
 

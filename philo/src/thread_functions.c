@@ -27,8 +27,6 @@ int	ft_pthreads_join(pthread_t ph, t_phil_struct **phils)
 		usleep(30);
 		pthread_mutex_destroy(phils[i]->left_ph);
 	}
-	pthread_mutex_destroy(phils[i]->init_data->for_print);
-	pthread_mutex_destroy(phils[i]->init_data->to_stop);
 	return (1);
 }
 
@@ -37,7 +35,7 @@ void	sleeping_thinking(t_phil_struct	*temp)
 	if (temp->finished != 1 && !temp->init_data->end_flag)
 	{
 		message(temp, "is sleeping");
-		usleep(temp->init_data->tt_sleep * 1000);
+		ft_to_sleep(temp->init_data, temp->init_data->tt_sleep);
 		message(temp, "is thinking");
 	}
 }
@@ -57,7 +55,7 @@ void	*eating(void *phils)
 		pthread_mutex_lock(temp->init_data->to_stop);
 		temp->t_must_die = get_current_time() + temp->init_data->tt_die;
 		pthread_mutex_unlock(temp->init_data->to_stop);
-		usleep(temp->init_data->tt_eat * 1000);
+		ft_to_sleep(temp->init_data, temp->init_data->tt_eat);
 		temp->has_eaten++;
 		if (temp->has_eaten >= temp->init_data->num_meals)
 			temp->finished = 1;
